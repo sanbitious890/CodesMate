@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { 
-  FaSearch, FaHeart, FaStar, FaUsers, 
-  FaCode, FaUserFriends, FaComments, FaBookOpen,
-  FaFire, FaCoffee, FaMoon, FaSun
-} from 'react-icons/fa'
-import { MdVerified, MdPeople } from 'react-icons/md'
-import { HiSparkles } from 'react-icons/hi'
+import { FaSearch, FaHeart, FaStar, FaUsers, FaCode, FaUserFriends, FaComments, FaBookOpen } from 'react-icons/fa'
+import { MdPeople } from 'react-icons/md'
 
 const Landing = () => {
   const { user, isAuthenticated } = useAuth()
@@ -26,7 +21,7 @@ const Landing = () => {
       role: 'Featured Developer', 
       rating: 4.8, 
       skills: ['React', 'Figma', 'Tailwind'],
-      bio: 'Love building cute UI and late night code talks 💗',
+      bio: 'Love building cute UI and late night code talks',
       badge: '🌟 Top Rated'
     },
     { 
@@ -34,7 +29,7 @@ const Landing = () => {
       role: 'Booked Developer', 
       rating: 4.9, 
       skills: ['Node.js', 'MongoDB', 'Express'],
-      bio: 'Building scalable apps and love anime ⚡',
+      bio: 'Building scalable apps and love anime',
       badge: '🔥 Hot Pick'
     },
     { 
@@ -42,7 +37,7 @@ const Landing = () => {
       role: 'UI/UX Designer', 
       rating: 4.7, 
       skills: ['Figma', 'Adobe XD', 'Prototyping'],
-      bio: 'Designing beautiful UI and coffee addict ☕',
+      bio: 'Designing beautiful UI and coffee addict',
       badge: '🎨 Creative'
     },
   ]
@@ -54,34 +49,22 @@ const Landing = () => {
     { name: 'Exam Prep Hub', members: 31 },
   ]
 
-  const feed = [
-    { 
-      user: 'Krishna', 
-      time: '2h ago', 
-      post: 'Looking for a Python partner to work on ML project 🚀',
-      detail: "Let's build something cool together! 💗",
-      likes: 28, 
-      comments: 12,
-      tag: '#MachineLearning'
-    },
-  ]
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FFF5F7] via-white to-[#FFF9FB] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 px-4 py-6 pb-32">
       
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
 
         {/* ===== HEADER ===== */}
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-2xl font-bold text-[#5A4A6A] dark:text-white flex items-center gap-2">
-              Codesmate® <span className="text-pink-400"><FaHeart className="inline text-pink-400" /></span>
+              Codesmate <span className="text-pink-400"><FaHeart className="inline text-pink-400" /></span>
             </h1>
             <p className="text-[#8B7A9B] dark:text-gray-300 text-sm">
               Find your coding partner, build together
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <button className="text-[#8B7A9B] dark:text-gray-300 hover:text-pink-400 transition">
               <FaHeart className="text-xl" />
             </button>
@@ -129,7 +112,7 @@ const Landing = () => {
           </div>
           <div className="flex flex-wrap gap-2">
             {interests.map((tag, i) => (
-              <span key={i} className="px-5 py-2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-full border-2 border-[#FFD6E7] dark:border-gray-700 text-[#5A4A6A] dark:text-white text-sm hover:border-pink-400 transition cursor-pointer">
+              <span key={i} className="px-4 py-2 bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-full border-2 border-[#FFD6E7] dark:border-gray-700 text-[#5A4A6A] dark:text-white text-sm hover:border-pink-400 transition cursor-pointer">
                 {tag}
               </span>
             ))}
@@ -142,29 +125,29 @@ const Landing = () => {
             <h2 className="text-lg font-bold text-[#5A4A6A] dark:text-white">Top Matches for You</h2>
             <button className="text-sm text-pink-400 hover:text-pink-500">See all</button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {matches.map((match, i) => (
-              <div key={i} className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-5 border-2 border-[#FFD6E7] dark:border-gray-700 shadow-md hover:shadow-xl transition">
-                <div className="flex justify-between items-start">
+              <div key={i} className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-5 border-2 border-[#FFD6E7] dark:border-gray-700 shadow-md hover:shadow-xl transition">
+                <div className="flex justify-between items-start mb-2">
                   <div>
                     <h3 className="font-bold text-[#5A4A6A] dark:text-white">{match.name}</h3>
-                    <p className="text-xs text-pink-400 font-semibold">{match.role}</p>
-                    <p className="text-sm text-[#B8A8C8] dark:text-gray-400 flex items-center gap-1 mt-1">
-                      <FaStar className="text-yellow-400" /> {match.rating}
-                    </p>
+                    <p className="text-xs text-pink-500 font-semibold">{match.role}</p>
                   </div>
-                  <span className="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-500 px-2 py-1 rounded-full">
+                  <span className="text-xs bg-pink-100 dark:bg-pink-900/30 text-pink-600 px-2 py-1 rounded-full">
                     {match.badge}
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-1 my-3">
+                <div className="flex items-center gap-1 text-sm text-[#B8A8C8] dark:text-gray-400 mb-3">
+                  <FaStar className="text-yellow-400" /> {match.rating}
+                </div>
+                <div className="flex flex-wrap gap-1 mb-3">
                   {match.skills.map((skill, idx) => (
                     <span key={idx} className="px-2 py-0.5 bg-pink-50 dark:bg-gray-700/50 text-[#8B7A9B] dark:text-gray-300 text-xs rounded-full border border-pink-100">
                       {skill}
                     </span>
                   ))}
                 </div>
-                <p className="text-xs text-[#8B7A9B] dark:text-gray-400 mb-3">{match.bio}</p>
+                <p className="text-sm text-[#8B7A9B] dark:text-gray-400 mb-3">{match.bio}</p>
                 <button className="w-full bg-gradient-to-r from-pink-400 to-purple-400 text-white px-4 py-2 rounded-full text-sm font-semibold hover:shadow-lg transition">
                   Say Hi 💗
                 </button>
@@ -181,12 +164,12 @@ const Landing = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {rooms.map((room, i) => (
-              <div key={i} className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-4 border-2 border-[#FFD6E7] dark:border-gray-700 shadow-md text-center">
+              <div key={i} className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-4 border-2 border-[#FFD6E7] dark:border-gray-700 shadow-md text-center">
                 <h3 className="font-semibold text-[#5A4A6A] dark:text-white">{room.name}</h3>
-                <p className="text-xs text-[#B8A8C8] dark:text-gray-400 flex items-center justify-center gap-1 mt-1">
+                <p className="text-sm text-[#B8A8C8] dark:text-gray-400 flex items-center justify-center gap-1 mt-1">
                   <MdPeople /> {room.members} members
                 </p>
-                <button className="mt-2 bg-gradient-to-r from-pink-400 to-purple-400 text-white px-5 py-1.5 rounded-full text-xs font-semibold hover:shadow-lg transition">
+                <button className="mt-2 bg-gradient-to-r from-pink-400 to-purple-400 text-white px-6 py-1.5 rounded-full text-sm font-semibold hover:shadow-lg transition">
                   Join
                 </button>
               </div>
@@ -197,26 +180,24 @@ const Landing = () => {
         {/* ===== COMMUNITY FEED ===== */}
         <div className="mb-8">
           <h2 className="text-lg font-bold text-[#5A4A6A] dark:text-white mb-3">Community Feed</h2>
-          {feed.map((item, i) => (
-            <div key={i} className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-5 border-2 border-[#FFD6E7] dark:border-gray-700 shadow-md">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-200 to-purple-200 flex items-center justify-center text-white font-bold">
-                  {item.user[0]}
-                </div>
-                <div>
-                  <p className="font-semibold text-[#5A4A6A] dark:text-white">{item.user}</p>
-                  <p className="text-xs text-[#B8A8C8] dark:text-gray-400">{item.time}</p>
-                </div>
+          <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-5 border-2 border-[#FFD6E7] dark:border-gray-700 shadow-md">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-200 to-purple-200 flex items-center justify-center text-white font-bold">
+                K
               </div>
-              <p className="text-[#5A4A6A] dark:text-white text-sm">💬 {item.post}</p>
-              <p className="text-sm text-[#8B7A9B] dark:text-gray-300 mt-1">{item.detail}</p>
-              <div className="flex items-center gap-4 mt-3 text-xs text-[#B8A8C8] dark:text-gray-400">
-                <span className="flex items-center gap-1">❤️ {item.likes}</span>
-                <span className="flex items-center gap-1">💬 {item.comments}</span>
-                <span className="text-pink-400">{item.tag}</span>
+              <div>
+                <p className="font-semibold text-[#5A4A6A] dark:text-white">Krishna</p>
+                <p className="text-xs text-[#B8A8C8] dark:text-gray-400">2h ago</p>
               </div>
             </div>
-          ))}
+            <p className="text-[#5A4A6A] dark:text-white text-sm">💬 Looking for a Python partner to work on ML project 🚀</p>
+            <p className="text-sm text-[#8B7A9B] dark:text-gray-300 mt-1">Let's build something cool together!</p>
+            <div className="flex items-center gap-4 mt-3 text-sm text-[#B8A8C8] dark:text-gray-400">
+              <span className="flex items-center gap-1">❤️ 28</span>
+              <span className="flex items-center gap-1">💬 12</span>
+              <span className="text-pink-400">#MachineLearning</span>
+            </div>
+          </div>
         </div>
 
         {/* ===== BOTTOM NAV ===== */}
