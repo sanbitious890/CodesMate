@@ -12,20 +12,23 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// TEST EACH ROUTE - UNCOMMENT ONE AT A TIME
-app.use('/api/auth', require('./routes/auth'));   // ← TEST THIS FIRST
-// app.use('/api/users', require('./routes/users'));  // ← Then this
-// app.use('/api/projects', require('./routes/projects')); // ← Then this
+// ✅ UNCOMMENT ALL ROUTES
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/users', require('./routes/users'));
+app.use('/api/projects', require('./routes/projects'));
 
+// Health check route
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
 
+// Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Something went wrong!' });
 });
 
+// 404 handler (must be LAST)
 app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
