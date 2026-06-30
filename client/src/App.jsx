@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
-import Navbar from './components/Navbar'
 
 // Pages
 import Landing from './pages/Landing'
@@ -20,17 +19,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Toaster 
-          position="top-right"
-          toastOptions={{
-            duration: 3000,
-            style: {
-              background: '#363636',
-              color: '#fff',
-            },
-          }}
-        />
-        <Navbar />
+        <Toaster position="top-right" />
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
@@ -38,7 +27,6 @@ function App() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/:id" element={<ProjectDetail />} />
           
-          {/* Protected Routes */}
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
