@@ -4,6 +4,8 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useAuth } from '../context/AuthContext'
 
+const API_URL = 'https://codesmate-backend.onrender.com/api'
+
 const ProjectDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -15,7 +17,7 @@ const ProjectDetail = () => {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/projects/${id}`)
+        const res = await axios.get(`${API_URL}/projects/${id}`)
         setProject(res.data)
       } catch (error) {
         toast.error('Project not found')
@@ -36,7 +38,7 @@ const ProjectDetail = () => {
 
     setJoining(true)
     try {
-      const res = await axios.post(`http://localhost:5000/api/projects/${id}/join`)
+      const res = await axios.post(`${API_URL}/projects/${id}/join`)
       setProject(res.data)
       toast.success('Joined project successfully! 🎉')
     } catch (error) {
@@ -50,7 +52,7 @@ const ProjectDetail = () => {
     if (!window.confirm('Are you sure you want to delete this project?')) return
 
     try {
-      await axios.delete(`http://localhost:5000/api/projects/${id}`)
+      await axios.delete(`${API_URL}/projects/${id}`)
       toast.success('Project deleted')
       navigate('/projects')
     } catch (error) {

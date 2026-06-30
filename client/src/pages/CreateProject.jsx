@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
+const API_URL = 'https://codesmate-backend.onrender.com/api'
+
 const CreateProject = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
@@ -39,7 +41,7 @@ const CreateProject = () => {
     e.preventDefault()
     setLoading(true)
     try {
-      await axios.post('http://localhost:5000/api/projects', formData)
+      await axios.post(`${API_URL}/projects`, formData)
       toast.success('Project created successfully! 🎉')
       navigate('/projects')
     } catch (error) {

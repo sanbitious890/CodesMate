@@ -2,6 +2,9 @@ import React, { createContext, useState, useContext, useEffect } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
+// ✅ SET YOUR LIVE BACKEND URL HERE
+const API_URL = 'https://codesmate-backend.onrender.com/api'
+
 const AuthContext = createContext()
 
 export const useAuth = () => {
@@ -35,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const res = await axios.get('http://localhost:5000/api/users/me')
+        const res = await axios.get(`${API_URL}/users/me`)
         setUser(res.data)
       } catch (error) {
         console.error('Error loading user:', error)
@@ -53,7 +56,7 @@ export const AuthProvider = ({ children }) => {
   // Register user
   const register = async (userData) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/register', userData)
+      const res = await axios.post(`${API_URL}/auth/register`, userData)
       const { token, ...userDataWithoutToken } = res.data
       localStorage.setItem('token', token)
       setToken(token)
@@ -69,7 +72,7 @@ export const AuthProvider = ({ children }) => {
   // Login user
   const login = async (email, password) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', { email, password })
+      const res = await axios.post(`${API_URL}/auth/login`, { email, password })
       const { token, ...userDataWithoutToken } = res.data
       localStorage.setItem('token', token)
       setToken(token)
@@ -93,7 +96,7 @@ export const AuthProvider = ({ children }) => {
   // Update user
   const updateUser = async (userData) => {
     try {
-      const res = await axios.put('http://localhost:5000/api/users/me', userData)
+      const res = await axios.put(`${API_URL}/users/me`, userData)
       setUser(res.data)
       toast.success('Profile updated! ✅')
       return { success: true }

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import ProjectCard from '../components/ProjectCard'
 
+const API_URL = 'https://codesmate-backend.onrender.com/api'
+
 const Projects = () => {
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
@@ -11,7 +13,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/projects')
+        const res = await axios.get(`${API_URL}/projects`)
         setProjects(res.data)
       } catch (error) {
         console.error('Error fetching projects:', error)
@@ -48,7 +50,6 @@ const Projects = () => {
         </Link>
       </div>
 
-      {/* Search */}
       <div className="mb-8">
         <input
           type="text"
@@ -59,7 +60,6 @@ const Projects = () => {
         />
       </div>
 
-      {/* Projects Grid */}
       {filteredProjects.length === 0 ? (
         <div className="glass-card p-12 text-center">
           <p className="text-gray-600 dark:text-gray-300">

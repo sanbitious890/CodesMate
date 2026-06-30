@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import axios from 'axios'
 
+const API_URL = 'https://codesmate-backend.onrender.com/api'
+
 const Dashboard = () => {
   const { user } = useAuth()
   const [projects, setProjects] = useState([])
@@ -16,10 +18,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/projects')
+        const res = await axios.get(`${API_URL}/projects`)
         const allProjects = res.data
         
-        // Filter projects the user is part of
         const userProjects = allProjects.filter(p => 
           p.members?.some(m => m._id === user?._id)
         )
@@ -61,7 +62,6 @@ const Dashboard = () => {
         </p>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="glass-card p-6">
           <div className="flex items-center justify-between">
@@ -92,14 +92,12 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
       <div className="mb-8">
         <Link to="/projects/create" className="btn-primary inline-block">
           + Create New Project
         </Link>
       </div>
 
-      {/* Your Projects */}
       <div>
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Your Projects</h2>
         {projects.length === 0 ? (
