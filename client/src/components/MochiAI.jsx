@@ -10,35 +10,34 @@ const MochiAI = ({
   isInputFocused = false,
   onLoginSuccess = false,
 }) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [position, setPosition] = useState({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
   const [state, setState] = useState('idle')
   const [expression, setExpression] = useState('happy')
   const [isSleeping, setIsSleeping] = useState(false)
   const [tailWag, setTailWag] = useState(0)
   const [blink, setBlink] = useState(false)
-  const [particles, setParticles] = useState([])
   const idleTimer = useRef(null)
   const animationFrame = useRef(null)
   const prevMousePos = useRef({ x: 0, y: 0 })
 
-  // SMOOTH LERP FOLLOWING - CORRECTED!
+  // ✅ SMOOTH FOLLOW — Mochi stays CLOSE to cursor
   useEffect(() => {
     const followCursor = () => {
-      // ✅ CORRECT: Mochi stays 25px to the right of the cursor
-      const targetX = mousePosition.x + 30   // +30 = stays to the RIGHT of cursor
-      const targetY = mousePosition.y - 20   // -20 = stays slightly ABOVE cursor
+      // Mochi follows cursor with a small offset (25px right, 10px up)
+      const targetX = mousePosition.x + 25
+      const targetY = mousePosition.y - 10
 
+      // Distance check for state
       const dx = targetX - position.x
       const dy = targetY - position.y
       const distance = Math.sqrt(dx * dx + dy * dy)
 
-      // Update state based on distance
       if (distance > 150) setState('run')
-      else if (distance > 30) setState('walk')
-      else if (distance < 5 && state !== 'sleep') setState('idle')
+      else if (distance > 25) setState('walk')
+      else setState('idle')
 
-      // LERP interpolation (smooth following)
-      const speed = 0.12
+      // LERP with higher speed for responsiveness
+      const speed = 0.15
       setPosition({
         x: position.x + dx * speed,
         y: position.y + dy * speed,
@@ -50,7 +49,7 @@ const MochiAI = ({
 
     animationFrame.current = requestAnimationFrame(followCursor)
     return () => cancelAnimationFrame(animationFrame.current)
-  }, [mousePosition, position, state])
+  }, [mousePosition, position])
 
   // Tail wag
   useEffect(() => {
@@ -125,17 +124,9 @@ const MochiAI = ({
     if (onLoginSuccess) {
       setState('happy')
       setExpression('excited')
-      const newParticles = Array.from({ length: 12 }, () => ({
-        x: (Math.random() - 0.5) * 120,
-        y: (Math.random() - 0.5) * 120 - 40,
-        size: Math.random() * 8 + 4,
-        delay: Math.random() * 0.5,
-      }))
-      setParticles(newParticles)
       setTimeout(() => {
         setState('idle')
         setExpression('happy')
-        setParticles([])
       }, 3000)
     }
   }, [onLoginSuccess])
@@ -160,7 +151,7 @@ const MochiAI = ({
         y: position.y,
         scale: isSleeping ? 0.85 : 1,
       }}
-      transition={{ type: 'spring', stiffness: 120, damping: 20, mass: 0.6 }}
+      transition={{ type: 'spring', stiffness: 150, damping: 20, mass: 0.5 }}
       whileHover={{ scale: 1.08 }}
       onClick={onChatOpen}
     >
