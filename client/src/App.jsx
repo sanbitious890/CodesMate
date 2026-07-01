@@ -6,9 +6,8 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Navbar from './components/Navbar'
 
 // Pages
-import Homepage from './pages/Homepage'
-import RegisterWithInterests from './pages/RegisterWithInterests'
-import Login from './pages/Login'
+import LoginPage from './pages/LoginPage'
+import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import Projects from './pages/Projects'
@@ -22,12 +21,10 @@ function App() {
       <BrowserRouter>
         <Toaster position="top-right" />
         <Routes>
-          {/* Homepage — NO Navbar */}
-          <Route path="/" element={<Homepage />} />
-          
-          {/* Auth pages — NO Navbar */}
-          <Route path="/register" element={<RegisterWithInterests />} />
-          <Route path="/login" element={<Login />} />
+          {/* Login is now the homepage */}
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<Register />} />
           
           {/* Main app pages — WITH Navbar */}
           <Route path="/projects" element={
