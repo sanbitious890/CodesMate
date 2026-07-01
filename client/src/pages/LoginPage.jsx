@@ -9,7 +9,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const { signInWithEmail, signInWithGoogle, signInWithGitHub } = useAuth()
+  const { login } = useAuth()
   const navigate = useNavigate()
   const [hearts, setHearts] = useState([])
 
@@ -32,30 +32,12 @@ const LoginPage = () => {
     setLoading(true)
     setError('')
     try {
-      await signInWithEmail(email, password)
+      await login(email, password)
       navigate('/dashboard')
     } catch (err) {
       setError(err.message)
     }
     setLoading(false)
-  }
-
-  const handleGoogle = async () => {
-    try {
-      await signInWithGoogle()
-      navigate('/dashboard')
-    } catch (err) {
-      setError(err.message)
-    }
-  }
-
-  const handleGitHub = async () => {
-    try {
-      await signInWithGitHub()
-      navigate('/dashboard')
-    } catch (err) {
-      setError(err.message)
-    }
   }
 
   return (
@@ -72,11 +54,6 @@ const LoginPage = () => {
           <FaHeart />
         </motion.div>
       ))}
-
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-pink-300/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-300/10 rounded-full blur-3xl animate-pulse delay-1000" />
-      </div>
 
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
@@ -135,21 +112,6 @@ const LoginPage = () => {
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
-
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-pink-200/50" /></div>
-              <div className="relative flex justify-center text-sm"><span className="px-4 bg-white/30 text-purple-400">Or continue with</span></div>
-            </div>
-            <div className="flex gap-3 mt-4">
-              <button onClick={handleGoogle} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-pink-200/50 hover:bg-white/30 transition text-purple-700">
-                <FaGoogle /> Google
-              </button>
-              <button onClick={handleGitHub} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-pink-200/50 hover:bg-white/30 transition text-purple-700">
-                <FaGithub /> GitHub
-              </button>
-            </div>
-          </div>
 
           <div className="mt-6 text-center text-purple-500">
             Don't have an account? <Link to="/signup" className="text-pink-500 font-semibold hover:underline">Create one</Link>

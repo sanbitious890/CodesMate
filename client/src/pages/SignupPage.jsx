@@ -11,7 +11,7 @@ const SignupPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const { signUpWithEmail } = useAuth()
+  const { signup } = useAuth()
   const navigate = useNavigate()
   const [hearts, setHearts] = useState([])
 
@@ -38,7 +38,7 @@ const SignupPage = () => {
     setLoading(true)
     setError('')
     try {
-      await signUpWithEmail(email, password, name)
+      await signup(name, email, password)
       navigate('/onboarding')
     } catch (err) {
       setError(err.message)
@@ -60,11 +60,6 @@ const SignupPage = () => {
           <FaHeart />
         </motion.div>
       ))}
-
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-pink-300/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-300/10 rounded-full blur-3xl animate-pulse delay-1000" />
-      </div>
 
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}

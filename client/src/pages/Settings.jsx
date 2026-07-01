@@ -1,67 +1,53 @@
-import React, { useState, useEffect } from 'react'
-import { useAuth } from '../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react'
+import { FaCog, FaHeart, FaMoon, FaSun, FaBell, FaLock } from 'react-icons/fa'
 
 const Settings = () => {
-  const { logout } = useAuth()
-  const navigate = useNavigate()
-  const [isDark, setIsDark] = useState(() => {
-    return localStorage.getItem('theme') === 'dark'
-  })
-
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
-    }
-  }, [isDark])
-
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
+  const [darkMode, setDarkMode] = useState(false)
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-        Settings
+    <div className="max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold text-[#2D1B3D] flex items-center gap-2 mb-6">
+        Settings <FaHeart className="text-pink-400" />
       </h1>
 
-      <div className="glass-card p-6 mb-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-          Appearance
-        </h2>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-gray-700 dark:text-gray-300">
-              {isDark ? 'Dark Mode' : 'Light Mode'}
-            </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Toggle between dark and light theme
-            </p>
+      <div className="space-y-4">
+        <div className="bg-white/40 backdrop-blur-lg rounded-2xl p-6 border border-white/50 shadow-lg flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <FaMoon className="text-purple-400 text-xl" />
+            <div>
+              <p className="font-medium text-[#2D1B3D]">Dark Mode</p>
+              <p className="text-sm text-purple-500">Toggle dark/light theme</p>
+            </div>
           </div>
           <button
-            onClick={() => setIsDark(!isDark)}
-            className="text-4xl p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+            onClick={() => setDarkMode(!darkMode)}
+            className="w-12 h-6 bg-pink-200 rounded-full relative transition"
           >
-            {isDark ? '☀️' : '🌙'}
+            <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition ${darkMode ? 'right-0.5 bg-pink-400' : 'left-0.5'}`} />
           </button>
         </div>
-      </div>
 
-      <div className="glass-card p-6">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-          Account
-        </h2>
-        <button
-          onClick={handleLogout}
-          className="w-full px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition font-semibold"
-        >
-          Logout
-        </button>
+        <div className="bg-white/40 backdrop-blur-lg rounded-2xl p-6 border border-white/50 shadow-lg flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <FaBell className="text-purple-400 text-xl" />
+            <div>
+              <p className="font-medium text-[#2D1B3D]">Notifications</p>
+              <p className="text-sm text-purple-500">Manage your notifications</p>
+            </div>
+          </div>
+          <button className="px-4 py-2 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full text-sm">Enable</button>
+        </div>
+
+        <div className="bg-white/40 backdrop-blur-lg rounded-2xl p-6 border border-white/50 shadow-lg flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <FaLock className="text-purple-400 text-xl" />
+            <div>
+              <p className="font-medium text-[#2D1B3D]">Privacy</p>
+              <p className="text-sm text-purple-500">Manage your privacy settings</p>
+            </div>
+          </div>
+          <button className="px-4 py-2 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full text-sm">Manage</button>
+        </div>
       </div>
     </div>
   )

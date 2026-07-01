@@ -1,142 +1,50 @@
-import React, { useState } from 'react'
-import { useAuth } from '../context/AuthContext'
-import axios from 'axios'
+import React from 'react'
+import { FaUser, FaHeart, FaCode, FaProjectDiagram, FaUsers } from 'react-icons/fa'
 
 const Profile = () => {
-  const { user, updateUser } = useAuth()
-  const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    name: user?.name || '',
-    bio: user?.bio || '',
-    github: user?.github || '',
-    skills: user?.skills || [],
-  })
-  const [skillInput, setSkillInput] = useState('')
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
-
-  const addSkill = () => {
-    if (skillInput.trim() && !formData.skills.includes(skillInput.trim())) {
-      setFormData({
-        ...formData,
-        skills: [...formData.skills, skillInput.trim()],
-      })
-      setSkillInput('')
-    }
-  }
-
-  const removeSkill = (skill) => {
-    setFormData({
-      ...formData,
-      skills: formData.skills.filter((s) => s !== skill),
-    })
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    await updateUser(formData)
-    setLoading(false)
-  }
-
   return (
-    <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-        Your Profile
-      </h1>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="flex justify-center mb-6">
-          <img
-            src={user?.profilePic || 'https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg'}
-            alt={user?.name}
-            className="w-32 h-32 rounded-full object-cover border-4 border-primary-500"
-          />
-        </div>
-
-        <div>
-          <label className="label-text">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="input-field"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="label-text">Bio</label>
-          <textarea
-            name="bio"
-            value={formData.bio}
-            onChange={handleChange}
-            className="input-field min-h-[100px]"
-            placeholder="Tell us about yourself..."
-          />
-        </div>
-
-        <div>
-          <label className="label-text">GitHub URL</label>
-          <input
-            type="url"
-            name="github"
-            value={formData.github}
-            onChange={handleChange}
-            className="input-field"
-            placeholder="https://github.com/yourusername"
-          />
-        </div>
-
-        <div>
-          <label className="label-text">Skills</label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={skillInput}
-              onChange={(e) => setSkillInput(e.target.value)}
-              className="input-field flex-1"
-              placeholder="Add a skill..."
-              onKeyPress={(e) => e.key === 'Enter' && addSkill()}
-            />
-            <button
-              type="button"
-              onClick={addSkill}
-              className="px-4 py-2 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition"
-            >
-              Add
-            </button>
+    <div className="max-w-4xl mx-auto">
+      <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-3xl p-8 mb-8 border border-pink-100 shadow-lg">
+        <div className="flex items-center gap-6">
+          <div className="w-24 h-24 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full flex items-center justify-center text-4xl text-white">
+            <FaUser />
           </div>
+          <div>
+            <h1 className="text-3xl font-bold text-[#2D1B3D]">User Profile</h1>
+            <p className="text-purple-500">Developer | Coder | Builder</p>
+            <div className="flex gap-4 mt-2 text-sm text-purple-500">
+              <span className="flex items-center gap-1"><FaCode /> 45 projects</span>
+              <span className="flex items-center gap-1"><FaUsers /> 12 teammates</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="bg-white/40 backdrop-blur-lg rounded-2xl p-6 border border-white/50 shadow-lg">
+          <h2 className="font-bold text-[#2D1B3D] flex items-center gap-2">
+            <FaHeart className="text-pink-400" /> Skills
+          </h2>
           <div className="flex flex-wrap gap-2 mt-3">
-            {formData.skills.map((skill) => (
-              <span
-                key={skill}
-                className="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 rounded-full text-sm flex items-center gap-2"
-              >
+            {['React', 'Node.js', 'JavaScript', 'Python', 'Tailwind', 'Firebase'].map((skill) => (
+              <span key={skill} className="px-3 py-1 bg-pink-50 text-pink-600 rounded-full text-sm border border-pink-200">
                 {skill}
-                <button
-                  type="button"
-                  onClick={() => removeSkill(skill)}
-                  className="hover:text-red-600"
-                >
-                  ×
-                </button>
               </span>
             ))}
           </div>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full btn-primary disabled:opacity-50"
-        >
-          {loading ? 'Saving...' : 'Save Changes'}
-        </button>
-      </form>
+        <div className="bg-white/40 backdrop-blur-lg rounded-2xl p-6 border border-white/50 shadow-lg">
+          <h2 className="font-bold text-[#2D1B3D] flex items-center gap-2">
+            <FaProjectDiagram className="text-purple-400" /> Recent Projects
+          </h2>
+          <ul className="mt-3 space-y-2 text-sm text-purple-600">
+            <li>• AI Chat App</li>
+            <li>• Portfolio Website</li>
+            <li>• E-commerce Platform</li>
+          </ul>
+        </div>
+      </div>
     </div>
   )
 }

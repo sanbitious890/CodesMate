@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { FaHeart, FaRocket, FaUsers, FaCode, FaStar, FaArrowRight } from 'react-icons/fa'
@@ -26,21 +26,15 @@ const LandingPage = () => {
       {hearts.map((heart) => (
         <motion.div
           key={heart.id}
-          initial={{ y: '100%', x: `${heart.x}%`, opacity: 0, scale: 0 }}
-          animate={{ y: '-10%', opacity: 0.4, scale: 1 }}
-          transition={{ duration: heart.duration, delay: heart.delay, ease: 'easeOut' }}
+          initial={{ y: '100%', x: `${heart.x}%`, opacity: 0 }}
+          animate={{ y: '-10%', opacity: 0.4 }}
+          transition={{ duration: heart.duration, delay: heart.delay }}
           className="absolute text-pink-300/40"
           style={{ fontSize: heart.size, left: `${heart.x}%` }}
         >
           <FaHeart />
         </motion.div>
       ))}
-
-      {/* 3D Glows */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-pink-300/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-300/10 rounded-full blur-3xl animate-pulse delay-1000" />
-      </div>
 
       <div className="relative z-10 container mx-auto px-4 py-12">
         {/* Nav */}
@@ -110,7 +104,6 @@ const LandingPage = () => {
           ))}
         </div>
 
-        {/* Footer */}
         <footer className="mt-20 text-center text-sm text-purple-400 border-t border-pink-200/30 pt-8">
           <p>© 2026 Codesmate. Made with <FaHeart className="inline text-pink-400" /> by developers, for developers.</p>
         </footer>

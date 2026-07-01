@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState } from 'react'
 
 const AuthContext = createContext()
 
@@ -12,8 +12,20 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const login = () => {
-    setUser({ name: 'Test User', email: 'test@test.com' })
+  const login = async (email, password) => {
+    setLoading(true)
+    // Simulate login
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    setUser({ email, name: 'Test User' })
+    setLoading(false)
+    return { success: true }
+  }
+
+  const signup = async (name, email, password) => {
+    setLoading(true)
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    setUser({ email, name })
+    setLoading(false)
     return { success: true }
   }
 
@@ -25,6 +37,7 @@ export const AuthProvider = ({ children }) => {
     user,
     loading,
     login,
+    signup,
     logout,
     isAuthenticated: !!user,
   }
