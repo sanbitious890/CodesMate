@@ -3,11 +3,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import Navbar from './components/Navbar'
 
 // Pages
-import Landing from './pages/Landing'
+import Homepage from './pages/Homepage'
+import RegisterWithInterests from './pages/RegisterWithInterests'
 import Login from './pages/Login'
-import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Profile from './pages/Profile'
 import Projects from './pages/Projects'
@@ -21,30 +22,61 @@ function App() {
       <BrowserRouter>
         <Toaster position="top-right" />
         <Routes>
-          <Route path="/" element={<Landing />} />
+          {/* Homepage — NO Navbar */}
+          <Route path="/" element={<Homepage />} />
+          
+          {/* Auth pages — NO Navbar */}
+          <Route path="/register" element={<RegisterWithInterests />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/projects/:id" element={<ProjectDetail />} />
+          
+          {/* Main app pages — WITH Navbar */}
+          <Route path="/projects" element={
+            <>
+              <Navbar />
+              <Projects />
+            </>
+          } />
+          
+          <Route path="/projects/:id" element={
+            <>
+              <Navbar />
+              <ProjectDetail />
+            </>
+          } />
           
           <Route path="/dashboard" element={
             <ProtectedRoute>
-              <Dashboard />
+              <>
+                <Navbar />
+                <Dashboard />
+              </>
             </ProtectedRoute>
           } />
+          
           <Route path="/profile" element={
             <ProtectedRoute>
-              <Profile />
+              <>
+                <Navbar />
+                <Profile />
+              </>
             </ProtectedRoute>
           } />
+          
           <Route path="/projects/create" element={
             <ProtectedRoute>
-              <CreateProject />
+              <>
+                <Navbar />
+                <CreateProject />
+              </>
             </ProtectedRoute>
           } />
+          
           <Route path="/settings" element={
             <ProtectedRoute>
-              <Settings />
+              <>
+                <Navbar />
+                <Settings />
+              </>
             </ProtectedRoute>
           } />
         </Routes>
