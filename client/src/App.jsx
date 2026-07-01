@@ -4,13 +4,12 @@ import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Layout from './components/Layout'
 
-// Pages
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import OnboardingPage from './pages/OnboardingPage'
 import Dashboard from './pages/Dashboard'
-import ProjectsPage from './pages/ProjectsPage'
+import Projects from './pages/Projects'        // ← FIXED
 import ProjectPartner from './pages/ProjectPartner'
 import CommunityPage from './pages/CommunityPage'
 import LeaderboardPage from './pages/LeaderboardPage'
@@ -24,16 +23,14 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
-          {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
 
-          {/* Protected Routes with Layout */}
           <Route element={<Layout />}>
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
+            <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
             <Route path="/partner" element={<ProtectedRoute><ProjectPartner /></ProtectedRoute>} />
             <Route path="/community" element={<ProtectedRoute><CommunityPage /></ProtectedRoute>} />
             <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardPage /></ProtectedRoute>} />
