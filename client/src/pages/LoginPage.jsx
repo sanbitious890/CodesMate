@@ -26,15 +26,15 @@ const LoginPage = () => {
   const [hearts, setHearts] = useState([])
   const messagesEndRef = useRef(null)
 
-  // 3D Background — Color changing
+  // ===== 3D PINK BACKGROUND — SLOW COLOR SHIFT =====
   useEffect(() => {
     const interval = setInterval(() => {
-      setBgColor(prev => (prev + 1) % 360)
-    }, 50)
+      setBgColor(prev => (prev + 0.5) % 360)
+    }, 100)
     return () => clearInterval(interval)
   }, [])
 
-  // Floating hearts
+  // ===== FLOATING HEARTS =====
   useEffect(() => {
     const heartInterval = setInterval(() => {
       const newHeart = {
@@ -44,13 +44,14 @@ const LoginPage = () => {
         size: Math.random() * 20 + 10,
         speed: Math.random() * 2 + 1,
         delay: Math.random() * 2,
-        opacity: Math.random() * 0.5 + 0.3,
+        opacity: Math.random() * 0.4 + 0.2,
+        rotate: Math.random() * 360,
       }
       setHearts(prev => [...prev, newHeart])
       setTimeout(() => {
         setHearts(prev => prev.filter(h => h.id !== newHeart.id))
-      }, 4000)
-    }, 500)
+      }, 5000)
+    }, 400)
     return () => clearInterval(heartInterval)
   }, [])
 
@@ -144,41 +145,66 @@ const LoginPage = () => {
     <div 
       className="min-h-screen relative overflow-hidden flex items-center justify-center p-4"
       style={{
-        background: `linear-gradient(135deg, 
-          hsl(${bgColor}, 80%, 90%) 0%, 
-          hsl(${(bgColor + 30) % 360}, 80%, 85%) 25%, 
-          hsl(${(bgColor + 60) % 360}, 80%, 95%) 50%, 
-          hsl(${(bgColor + 90) % 360}, 80%, 88%) 75%, 
-          hsl(${(bgColor + 120) % 360}, 80%, 92%) 100%)`
+        background: `radial-gradient(ellipse at 20% 20%, 
+          hsl(${bgColor}, 85%, 92%) 0%, 
+          hsl(${(bgColor + 20) % 360}, 85%, 88%) 20%,
+          hsl(${(bgColor + 40) % 360}, 85%, 90%) 40%,
+          hsl(${(bgColor + 60) % 360}, 85%, 85%) 60%,
+          hsl(${(bgColor + 80) % 360}, 85%, 92%) 80%,
+          hsl(${(bgColor + 100) % 360}, 85%, 88%) 100%
+        )`,
       }}
     >
-      {/* Floating Hearts */}
+      {/* ===== 3D GLOW EFFECTS ===== */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div 
+          className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-3xl animate-pulse"
+          style={{ background: `hsl(${bgColor + 20}, 80%, 85%)`, opacity: 0.3 }}
+        />
+        <div 
+          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-3xl animate-pulse delay-1000"
+          style={{ background: `hsl(${bgColor + 60}, 80%, 90%)`, opacity: 0.25 }}
+        />
+        <div 
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-3xl animate-pulse delay-2000"
+          style={{ background: `hsl(${bgColor + 40}, 80%, 95%)`, opacity: 0.15 }}
+        />
+      </div>
+
+      {/* ===== FLOATING HEARTS ===== */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {hearts.map((heart) => (
           <motion.div
             key={heart.id}
-            initial={{ y: '100%', opacity: 0 }}
-            animate={{ y: '-10%', opacity: heart.opacity }}
-            transition={{ duration: heart.speed * 2, delay: heart.delay }}
+            initial={{ 
+              y: '110%', 
+              opacity: 0,
+              rotate: heart.rotate,
+              scale: 0
+            }}
+            animate={{ 
+              y: '-10%', 
+              opacity: heart.opacity,
+              rotate: heart.rotate + 360,
+              scale: 1
+            }}
+            transition={{ 
+              duration: heart.speed * 2.5, 
+              delay: heart.delay,
+              ease: "easeOut"
+            }}
             className="absolute"
             style={{
               left: `${heart.x}%`,
               fontSize: `${heart.size}px`,
             }}
           >
-            <FaHeart className="text-pink-400/40" />
+            <FaHeart className="text-pink-300/60 drop-shadow-lg" />
           </motion.div>
         ))}
       </div>
 
-      {/* 3D Glow Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-pink-300/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-300/10 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-pink-200/10 rounded-full blur-3xl animate-pulse delay-2000" />
-      </div>
-
-      {/* Main Content */}
+      {/* ===== MAIN CONTENT ===== */}
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -285,7 +311,7 @@ const LoginPage = () => {
         </motion.div>
       </motion.div>
 
-      {/* ===== MOCHI COMPANION (Fixed Bottom-Right) ===== */}
+      {/* ===== MOCHI COMPANION (Bottom-Right) ===== */}
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -301,7 +327,7 @@ const LoginPage = () => {
               exit={{ scale: 0.8, opacity: 0, y: 20 }}
               className="bg-white/95 backdrop-blur-2xl rounded-3xl shadow-2xl border-2 border-pink-200/50 w-80 max-h-[400px] flex flex-col mb-3 overflow-hidden"
             >
-              {/* Chat Header with Name Edit */}
+              {/* Chat Header */}
               <div className="flex items-center justify-between p-3 border-b border-pink-100/50 bg-gradient-to-r from-pink-50 to-purple-50">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full flex items-center justify-center text-lg">🐶</div>
