@@ -67,7 +67,7 @@ const LoginPage = () => {
         <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-300/10 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
-      {/* Floating Decorations */}
+      {/* Floating Hearts */}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(6)].map((_, i) => (
           <motion.div
@@ -229,4 +229,5 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage
+export default LoginPage/ /   F o r c e   r e b u i l d   a t   0 7 / 0 1 / 2 0 2 6   1 2 : 4 2 : 5 7  
+ 
