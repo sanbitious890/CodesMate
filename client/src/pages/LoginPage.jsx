@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { FaHeart, FaSignInAlt, FaUserPlus } from 'react-icons/fa'
-import MochiSVG from '../components/MochiSVG'
+import MochiAI from '../components/MochiAI'
+import AIChat from '../components/AIChat'
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -12,7 +13,13 @@ const LoginPage = () => {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [showChat, setShowChat] = useState(false)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [quote, setQuote] = useState('')
+  const [isHoveringButton, setIsHoveringButton] = useState(false)
+  const [isInputFocused, setIsInputFocused] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
+  const [loginSuccess, setLoginSuccess] = useState(false)
 
   const quotes = [
     '"Small steps build amazing developers."',
@@ -29,19 +36,29 @@ const LoginPage = () => {
     return () => clearInterval(quoteInterval)
   }, [])
 
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY })
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     const result = await login(email, password)
     setLoading(false)
     if (result.success) {
-      navigate('/dashboard')
+      setLoginSuccess(true)
+      setTimeout(() => navigate('/dashboard'), 2000)
     }
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FFF5F7] via-[#FFE8EE] to-[#F8F0FF] relative overflow-hidden flex items-center justify-center p-4">
       
+      {/* 3D Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-pink-200/20 via-purple-200/20 to-pink-300/20 animate-pulse" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-pink-300/10 rounded-full blur-3xl animate-pulse" />
@@ -57,41 +74,19 @@ const LoginPage = () => {
         {/* Logo */}
         <div className="text-center mb-4">
           <h1 className="text-5xl font-bold flex items-center justify-center gap-2">
-            <span className="bg-gradient-to-r from-pink-400 via-pink-500 to-purple-400 bg-clip-text text-transparent">
-              Codes
-            </span>
+            <span className="bg-gradient-to-r from-pink-400 via-pink-500 to-purple-400 bg-clip-text text-transparent">Codes</span>
             <span className="text-[#2D1B3D]">mate</span>
-            <motion.span
-              animate={{ scale: [1, 1.3, 1] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="text-pink-400"
-            >
+            <motion.span animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 3, repeat: Infinity }} className="text-pink-400">
               <FaHeart className="text-3xl" />
             </motion.span>
           </h1>
-          <p className="text-purple-600 text-sm mt-2">
-            ✨ Find your coding companion ✨
-          </p>
-        </div>
-
-        {/* MOCHI SVG - ADDED HERE */}
-        <div className="flex justify-center mb-4">
-          <div className="w-24 h-24">
-            <MochiSVG state="idle" expression="happy" />
-          </div>
+          <p className="text-purple-600 text-sm mt-2">✨ Find your coding companion ✨</p>
         </div>
 
         {/* Quote */}
         <div className="text-center mb-6 min-h-[3rem]">
           <AnimatePresence mode="wait">
-            <motion.p
-              key={quote}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 1 }}
-              className="text-purple-600 text-lg italic max-w-sm mx-auto"
-            >
+            <motion.p key={quote} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 1 }} className="text-purple-600 text-lg italic max-w-sm mx-auto">
               {quote || '"Small steps build amazing developers."'}
             </motion.p>
           </AnimatePresence>
@@ -111,6 +106,8 @@ const LoginPage = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onFocus={() => setIsInputFocused(true)}
+                onBlur={() => setIsInputFocused(false)}
                 className="w-full px-4 py-3.5 rounded-2xl border-2 border-pink-200/50 focus:border-pink-400 outline-none transition bg-white/40 text-purple-800 placeholder-purple-300"
                 placeholder="you@example.com"
                 required
@@ -124,15 +121,13 @@ const LoginPage = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => setIsInputFocused(true)}
+                  onBlur={() => setIsInputFocused(false)}
                   className="w-full px-4 py-3.5 rounded-2xl border-2 border-pink-200/50 focus:border-pink-400 outline-none transition bg-white/40 text-purple-800 placeholder-purple-300"
                   placeholder="••••••••"
                   required
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-purple-400/60 hover:text-purple-600 transition"
-                >
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-purple-400/60 hover:text-purple-600 transition">
                   {showPassword ? '👁️' : '👁️‍🗨️'}
                 </button>
               </div>
@@ -142,13 +137,10 @@ const LoginPage = () => {
               type="submit"
               disabled={loading}
               className="w-full bg-gradient-to-r from-pink-400 via-pink-500 to-purple-400 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg transition-all duration-300 disabled:opacity-50 hover:scale-105"
+              onMouseEnter={() => setIsHoveringButton(true)}
+              onMouseLeave={() => setIsHoveringButton(false)}
             >
-              {loading ? 'Signing in...' : (
-                <>
-                  Sign In
-                  <FaSignInAlt className="inline ml-2" />
-                </>
-              )}
+              {loading ? 'Signing in...' : <>Sign In <FaSignInAlt className="inline ml-2" /></>}
             </button>
           </form>
 
@@ -156,18 +148,29 @@ const LoginPage = () => {
             <Link
               to="/register"
               className="inline-flex items-center gap-2 px-8 py-3.5 bg-white/50 backdrop-blur-sm border-2 border-pink-300/50 text-purple-700 rounded-2xl font-semibold hover:bg-white/70 transition hover:scale-105"
+              onMouseEnter={() => setIsHoveringButton(true)}
+              onMouseLeave={() => setIsHoveringButton(false)}
             >
-              <FaUserPlus className="text-pink-400" />
-              Create Account
+              <FaUserPlus className="text-pink-400" /> Create Account
             </Link>
           </div>
         </motion.div>
       </motion.div>
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-purple-300/50">
-        © 2026 Codesmate
-      </div>
+      {/* Mochi AI */}
+      <MochiAI
+        mousePosition={mousePosition}
+        onChatOpen={() => setShowChat(!showChat)}
+        isTyping={isTyping}
+        isHoveringButton={isHoveringButton}
+        isInputFocused={isInputFocused}
+        onLoginSuccess={loginSuccess}
+      />
 
+      {/* AI Chat */}
+      <AIChat isOpen={showChat} onClose={() => setShowChat(false)} />
+
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-purple-300/50">© 2026 Codesmate</div>
     </div>
   )
 }

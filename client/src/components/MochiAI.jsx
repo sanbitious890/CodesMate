@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MochiSVG from './MochiSVG'
-import { FaHeart, FaSparkles } from 'react-icons/fa'
 
 const MochiAI = ({
   mousePosition,
@@ -17,13 +16,10 @@ const MochiAI = ({
   const [isSleeping, setIsSleeping] = useState(false)
   const [tailWag, setTailWag] = useState(0)
   const [blink, setBlink] = useState(false)
-  const [isHappy, setIsHappy] = useState(false)
-  const [rotation, setRotation] = useState(0)
   const [particles, setParticles] = useState([])
   const idleTimer = useRef(null)
   const animationFrame = useRef(null)
   const prevMousePos = useRef({ x: 0, y: 0 })
-  const lastStateChange = useRef(Date.now())
 
   // Smooth LERP following
   useEffect(() => {
@@ -31,32 +27,19 @@ const MochiAI = ({
       const targetX = mousePosition.x - 35
       const targetY = mousePosition.y - 70
 
-      // Calculate distance
       const dx = targetX - position.x
       const dy = targetY - position.y
       const distance = Math.sqrt(dx * dx + dy * dy)
 
-      // Determine state based on movement
-      if (distance > 100) {
-        setState('run')
-      } else if (distance > 20) {
-        setState('walk')
-      } else if (distance < 5 && state !== 'sleep') {
-        setState('idle')
-      }
+      if (distance > 100) setState('run')
+      else if (distance > 20) setState('walk')
+      else if (distance < 5 && state !== 'sleep') setState('idle')
 
-      // LERP interpolation (smooth following)
       const speed = 0.12
-      const newX = position.x + dx * speed
-      const newY = position.y + dy * speed
-
-      setPosition({ x: newX, y: newY })
-
-      // Rotation based on direction
-      if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
-        const angle = Math.atan2(dy, dx)
-        setRotation(angle * 0.3)
-      }
+      setPosition({
+        x: position.x + dx * speed,
+        y: position.y + dy * speed,
+      })
 
       prevMousePos.current = mousePosition
       animationFrame.current = requestAnimationFrame(followCursor)
@@ -66,7 +49,7 @@ const MochiAI = ({
     return () => cancelAnimationFrame(animationFrame.current)
   }, [mousePosition, position, state])
 
-  // Tail wag animation
+  // Tail wag
   useEffect(() => {
     const tailInterval = setInterval(() => {
       setTailWag(prev => (prev + 8) % 360)
@@ -74,7 +57,7 @@ const MochiAI = ({
     return () => clearInterval(tailInterval)
   }, [])
 
-  // Blink animation
+  // Blink
   useEffect(() => {
     const blinkInterval = setInterval(() => {
       setBlink(true)
@@ -137,10 +120,8 @@ const MochiAI = ({
   // Login success animation
   useEffect(() => {
     if (onLoginSuccess) {
-      setIsHappy(true)
       setState('happy')
       setExpression('excited')
-      // Heart particles
       const newParticles = Array.from({ length: 12 }, () => ({
         x: (Math.random() - 0.5) * 120,
         y: (Math.random() - 0.5) * 120 - 40,
@@ -149,7 +130,6 @@ const MochiAI = ({
       }))
       setParticles(newParticles)
       setTimeout(() => {
-        setIsHappy(false)
         setState('idle')
         setExpression('happy')
         setParticles([])
@@ -157,13 +137,12 @@ const MochiAI = ({
     }
   }, [onLoginSuccess])
 
-  // Random expression changes
+  // Random expressions
   useEffect(() => {
     if (state === 'idle' && !isSleeping) {
       const interval = setInterval(() => {
         const expressions = ['happy', 'thinking', 'curious', 'proud']
-        const newExpression = expressions[Math.floor(Math.random() * expressions.length)]
-        setExpression(newExpression)
+        setExpression(expressions[Math.floor(Math.random() * expressions.length)])
       }, 4000)
       return () => clearInterval(interval)
     }
@@ -172,23 +151,13 @@ const MochiAI = ({
   return (
     <motion.div
       className="fixed z-20 cursor-pointer select-none"
-      style={{
-        width: '90px',
-        height: '90px',
-        pointerEvents: 'auto',
-      }}
+      style={{ width: '90px', height: '90px', pointerEvents: 'auto' }}
       animate={{
         x: position.x,
         y: position.y,
-        rotate: rotation,
         scale: isSleeping ? 0.85 : 1,
       }}
-      transition={{
-        type: 'spring',
-        stiffness: 120,
-        damping: 20,
-        mass: 0.6,
-      }}
+      transition={{ type: 'spring', stiffness: 120, damping: 20, mass: 0.6 }}
       whileHover={{ scale: 1.08 }}
       onClick={onChatOpen}
     >
@@ -197,18 +166,14 @@ const MochiAI = ({
         expression={expression}
         isSleeping={isSleeping}
         isTyping={isTyping}
-        isHappy={isHappy}
         tailWag={tailWag}
         blink={blink}
-        scale={isSleeping ? 0.85 : 1}
-        rotate={rotation}
       />
 
       {/* Name Tag */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
         className="absolute -top-9 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-purple-600 border border-pink-200 shadow-lg whitespace-nowrap flex items-center gap-1.5"
       >
         ✨ Mochi
@@ -245,33 +210,6 @@ const MochiAI = ({
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Heart Particles */}
-      {particles.map((particle, i) => (
-        <motion.div
-          key={i}
-          className="absolute text-pink-400"
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{
-            opacity: [0, 1, 0],
-            scale: [0, 1, 0],
-            x: particle.x,
-            y: particle.y,
-          }}
-          transition={{
-            duration: 1.5,
-            delay: particle.delay,
-            ease: 'easeOut',
-          }}
-          style={{
-            fontSize: particle.size + 'px',
-            left: '50%',
-            top: '50%',
-          }}
-        >
-          <FaHeart />
-        </motion.div>
-      ))}
 
       {/* Typing Indicator */}
       {isTyping && (
