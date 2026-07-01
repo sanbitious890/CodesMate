@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { FaHeart, FaSignInAlt, FaUserPlus } from 'react-icons/fa'
+import MochiSVG from '../components/MochiSVG'
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -17,6 +18,8 @@ const LoginPage = () => {
     '"Small steps build amazing developers."',
     '"Code is poetry written in logic."',
     '"Every expert was once a beginner."',
+    '"The best way to predict the future is to build it."',
+    '"Learning to code is learning to create."',
   ]
 
   useEffect(() => {
@@ -39,7 +42,6 @@ const LoginPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FFF5F7] via-[#FFE8EE] to-[#F8F0FF] relative overflow-hidden flex items-center justify-center p-4">
       
-      {/* 3D Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-br from-pink-200/20 via-purple-200/20 to-pink-300/20 animate-pulse" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-pink-300/10 rounded-full blur-3xl animate-pulse" />
@@ -53,7 +55,7 @@ const LoginPage = () => {
         className="relative z-10 max-w-md w-full"
       >
         {/* Logo */}
-        <div className="text-center mb-6">
+        <div className="text-center mb-4">
           <h1 className="text-5xl font-bold flex items-center justify-center gap-2">
             <span className="bg-gradient-to-r from-pink-400 via-pink-500 to-purple-400 bg-clip-text text-transparent">
               Codes
@@ -72,8 +74,15 @@ const LoginPage = () => {
           </p>
         </div>
 
+        {/* MOCHI SVG - ADDED HERE */}
+        <div className="flex justify-center mb-4">
+          <div className="w-24 h-24">
+            <MochiSVG state="idle" expression="happy" />
+          </div>
+        </div>
+
         {/* Quote */}
-        <div className="text-center mb-8 min-h-[4rem]">
+        <div className="text-center mb-6 min-h-[3rem]">
           <AnimatePresence mode="wait">
             <motion.p
               key={quote}
