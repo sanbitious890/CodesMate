@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
 import { FaHeart, FaSignInAlt, FaUserPlus } from 'react-icons/fa'
 import MochiAI from '../components/MochiAI'
+import AIChat from '../components/AIChat'
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -12,14 +13,12 @@ const LoginPage = () => {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [showPetChat, setShowPetChat] = useState(false)
+  const [showChat, setShowChat] = useState(false)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [quote, setQuote] = useState('')
-  const [petMessage, setPetMessage] = useState('')
-  const [chatHistory, setChatHistory] = useState([])
-  const [isTyping, setIsTyping] = useState(false)
   const [isHoveringButton, setIsHoveringButton] = useState(false)
   const [isInputFocused, setIsInputFocused] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
   const [loginSuccess, setLoginSuccess] = useState(false)
 
   const quotes = [
@@ -45,28 +44,6 @@ const LoginPage = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [])
 
-  const handlePetChat = () => {
-    if (petMessage.trim()) {
-      setIsTyping(true)
-      const responses = [
-        "That's a great question! Let me think... 🤔\n\n💡 Here's what I'd recommend...",
-        "I love this idea! Let me explain... ✨\n\n📚 The key thing to understand is...",
-        "Great question! Let me break it down:\n\n🔍 First, let's look at...",
-        "This is such a cool concept! 💗\n\n🚀 Here's how we can approach it...",
-      ]
-      const response = responses[Math.floor(Math.random() * responses.length)]
-      
-      setTimeout(() => {
-        setChatHistory([
-          ...chatHistory,
-          { user: petMessage, pet: response + "\n\n💗 Let me know if you need more help!" }
-        ])
-        setPetMessage('')
-        setIsTyping(false)
-      }, 1500)
-    }
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -90,6 +67,21 @@ const LoginPage = () => {
         <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-purple-300/10 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
+      {/* Floating Decorations */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            animate={{ y: [0, -30, 0], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 6 + i * 1.5, repeat: Infinity, delay: i * 1.2 }}
+            className="absolute"
+            style={{ top: `${5 + i * 15}%`, left: `${3 + i * 14}%` }}
+          >
+            <FaHeart className={`text-pink-300/20 text-${4 + i % 3}xl`} />
+          </motion.div>
+        ))}
+      </div>
+
       {/* Main Content */}
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
@@ -97,7 +89,6 @@ const LoginPage = () => {
         transition={{ duration: 0.8 }}
         className="relative z-10 max-w-md w-full"
       >
-        
         {/* Logo */}
         <div className="text-center mb-6">
           <h1 className="text-5xl font-bold flex items-center justify-center gap-2 font-['Dancing_Script','cursive']">
@@ -216,80 +207,19 @@ const LoginPage = () => {
       {/* Mochi AI */}
       <MochiAI
         mousePosition={mousePosition}
-        onChatOpen={() => setShowPetChat(!showPetChat)}
-        showChat={showPetChat}
+        onChatOpen={() => setShowChat(!showChat)}
         isTyping={isTyping}
         isHoveringButton={isHoveringButton}
         isInputFocused={isInputFocused}
         onLoginSuccess={loginSuccess}
       />
 
-      {/* Pet Chat */}
-      <AnimatePresence>
-        {showPetChat && (
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: 20 }}
-            className="fixed bottom-32 right-8 w-80 max-h-[500px] bg-white/95 backdrop-blur-2xl rounded-3xl p-5 shadow-2xl border-2 border-pink-200/50 z-30 flex flex-col"
-          >
-            <div className="flex items-center gap-3 mb-3 pb-3 border-b border-pink-100/50">
-              <div className="w-10 h-10 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full flex items-center justify-center shadow-md">
-                <span className="text-xl">☁️</span>
-              </div>
-              <div>
-                <div className="font-semibold text-purple-700 flex items-center gap-1.5">
-                  Mochi AI
-                  <span className="text-[10px] text-purple-400 font-normal">✨ 4.9</span>
-                </div>
-                <div className="text-xs text-purple-400 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 bg-green-400 rounded-full inline-block animate-pulse" />
-                  Online • Coding Buddy
-                </div>
-              </div>
-            </div>
-
-            <div className="flex-1 overflow-y-auto max-h-52 space-y-2 mb-3 pr-1">
-              {chatHistory.map((chat, i) => (
-                <div key={i} className="space-y-1.5">
-                  <div className="text-sm text-purple-700 bg-pink-50 p-3 rounded-2xl rounded-bl-none border border-pink-100/50">
-                    💬 {chat.user}
-                  </div>
-                  <div className="text-sm text-purple-700 bg-purple-50 p-3 rounded-2xl rounded-br-none border border-purple-100/50 whitespace-pre-wrap">
-                    🤖 {chat.pet}
-                  </div>
-                </div>
-              ))}
-              {isTyping && (
-                <div className="text-sm text-purple-400 bg-purple-50 p-3 rounded-2xl rounded-br-none border border-purple-100/50">
-                  🤖 <span className="inline-flex gap-1">
-                    <span className="animate-bounce">•</span>
-                    <span className="animate-bounce delay-100">•</span>
-                    <span className="animate-bounce delay-200">•</span>
-                  </span>
-                </div>
-              )}
-            </div>
-
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={petMessage}
-                onChange={(e) => setPetMessage(e.target.value)}
-                placeholder="💭 Ask Mochi anything..."
-                className="flex-1 px-4 py-2.5 rounded-full border-2 border-pink-200/50 focus:border-pink-400 outline-none transition bg-white/50 text-purple-700 text-sm placeholder-purple-300"
-                onKeyPress={(e) => e.key === 'Enter' && handlePetChat()}
-              />
-              <button
-                onClick={handlePetChat}
-                className="bg-gradient-to-r from-pink-400 to-purple-400 text-white px-4 py-2.5 rounded-full text-sm font-semibold hover:shadow-lg transition flex-shrink-0"
-              >
-                Send
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* AI Chat */}
+      <AIChat
+        isOpen={showChat}
+        onClose={() => setShowChat(false)}
+        petName="Mochi"
+      />
 
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-purple-300/50">
         © 2026 Codesmate
