@@ -21,20 +21,23 @@ const MochiAI = ({
   const animationFrame = useRef(null)
   const prevMousePos = useRef({ x: 0, y: 0 })
 
-  // Smooth LERP following
+  // SMOOTH LERP FOLLOWING - CORRECTED!
   useEffect(() => {
     const followCursor = () => {
-      const targetX = mousePosition.x - 35
-      const targetY = mousePosition.y - 70
+      // ✅ CORRECT: Mochi stays 25px to the right of the cursor
+      const targetX = mousePosition.x + 30   // +30 = stays to the RIGHT of cursor
+      const targetY = mousePosition.y - 20   // -20 = stays slightly ABOVE cursor
 
       const dx = targetX - position.x
       const dy = targetY - position.y
       const distance = Math.sqrt(dx * dx + dy * dy)
 
-      if (distance > 100) setState('run')
-      else if (distance > 20) setState('walk')
+      // Update state based on distance
+      if (distance > 150) setState('run')
+      else if (distance > 30) setState('walk')
       else if (distance < 5 && state !== 'sleep') setState('idle')
 
+      // LERP interpolation (smooth following)
       const speed = 0.12
       setPosition({
         x: position.x + dx * speed,
