@@ -1,120 +1,71 @@
-import React, { createContext, useState, useContext, useEffect } from 'react'
-import axios from 'axios'
-import toast from 'react-hot-toast'
-
-// ✅ SET YOUR LIVE BACKEND URL HERE
-const API_URL = 'https://codesmate-backend.onrender.com/api'
+import React, { createContext, useContext, useState, useEffect } from 'react'
+import { 
+  auth, 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  GithubAuthProvider,
+  signOut,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from 'firebase/auth'
 
 const AuthContext = createContext()
 
 export const useAuth = () => {
   const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
+  if (!context) throw new Error('useAuth must be used within AuthProvider')
   return context
 }
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [token, setToken] = useState(localStorage.getItem('token'))
+  const [userData, setUserData] = useState(null)
 
-  // Set axios default header
   useEffect(() => {
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    } else {
-      delete axios.defaults.headers.common['Authorization']
-    }
-  }, [token])
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user)
+      setLoading(false)
+    })
+    return unsubscribe
+  }, [])
 
-  // Load user on mount
-  useEffect(() => {
-    const loadUser = async () => {
-      if (!token) {
-        setLoading(false)
-        return
-      }
-
-      try {
-        const res = await axios.get(`${API_URL}/users/me`)
-        setUser(res.data)
-      } catch (error) {
-        console.error('Error loading user:', error)
-        localStorage.removeItem('token')
-        setToken(null)
-        setUser(null)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadUser()
-  }, [token])
-
-  // Register user
-  const register = async (userData) => {
-    try {
-      const res = await axios.post(`${API_URL}/auth/register`, userData)
-      const { token, ...userDataWithoutToken } = res.data
-      localStorage.setItem('token', token)
-      setToken(token)
-      setUser(userDataWithoutToken)
-      toast.success('Registration successful! 🎉')
-      return { success: true }
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Registration failed')
-      return { success: false, error: error.response?.data?.message }
-    }
+  const signUpWithEmail = async (email, password, name) => {
+    const result = await createUserWithEmailAndPassword(auth, email, password)
+    await updateProfile(result.user, { displayName: name })
+    return result
   }
 
-  // Login user
-  const login = async (email, password) => {
-    try {
-      const res = await axios.post(`${API_URL}/auth/login`, { email, password })
-      const { token, ...userDataWithoutToken } = res.data
-      localStorage.setItem('token', token)
-      setToken(token)
-      setUser(userDataWithoutToken)
-      toast.success('Welcome back! 👋')
-      return { success: true }
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Login failed')
-      return { success: false, error: error.response?.data?.message }
-    }
+  const signInWithEmail = async (email, password) => {
+    return await signInWithEmailAndPassword(auth, email, password)
   }
 
-  // Logout user
-  const logout = () => {
-    localStorage.removeItem('token')
-    setToken(null)
-    setUser(null)
-    toast.success('Logged out successfully')
+  const signInWithGoogle = async () => {
+    const provider = new GoogleAuthProvider()
+    return await signInWithPopup(auth, provider)
   }
 
-  // Update user
-  const updateUser = async (userData) => {
-    try {
-      const res = await axios.put(`${API_URL}/users/me`, userData)
-      setUser(res.data)
-      toast.success('Profile updated! ✅')
-      return { success: true }
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Update failed')
-      return { success: false }
-    }
+  const signInWithGitHub = async () => {
+    const provider = new GithubAuthProvider()
+    return await signInWithPopup(auth, provider)
+  }
+
+  const logout = async () => {
+    return await signOut(auth)
   }
 
   const value = {
     user,
+    userData,
+    setUserData,
     loading,
-    token,
-    register,
-    login,
+    signUpWithEmail,
+    signInWithEmail,
+    signInWithGoogle,
+    signInWithGitHub,
     logout,
-    updateUser,
-    isAuthenticated: !!user,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
-import { FaHeart, FaEnvelope, FaLock, FaGoogle, FaGithub, FaArrowRight } from 'react-icons/fa'
+import { FaHeart, FaEnvelope, FaLock, FaUser, FaArrowRight } from 'react-icons/fa'
 
-const LoginPage = () => {
+const SignupPage = () => {
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const { signInWithEmail, signInWithGoogle, signInWithGitHub } = useAuth()
+  const { signUpWithEmail } = useAuth()
   const navigate = useNavigate()
   const [hearts, setHearts] = useState([])
 
@@ -29,33 +31,19 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
     setLoading(true)
     setError('')
     try {
-      await signInWithEmail(email, password)
-      navigate('/dashboard')
+      await signUpWithEmail(email, password, name)
+      navigate('/onboarding')
     } catch (err) {
       setError(err.message)
     }
     setLoading(false)
-  }
-
-  const handleGoogle = async () => {
-    try {
-      await signInWithGoogle()
-      navigate('/dashboard')
-    } catch (err) {
-      setError(err.message)
-    }
-  }
-
-  const handleGitHub = async () => {
-    try {
-      await signInWithGitHub()
-      navigate('/dashboard')
-    } catch (err) {
-      setError(err.message)
-    }
   }
 
   return (
@@ -90,13 +78,28 @@ const LoginPage = () => {
             <span className="text-[#2D1B3D]">mate</span>
             <FaHeart className="text-pink-400" />
           </h1>
-          <p className="text-purple-600 mt-2">Welcome back! Sign in to continue.</p>
+          <p className="text-purple-600 mt-2">Create your account and start building!</p>
         </div>
 
         <div className="bg-white/30 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl border border-white/40">
           {error && <div className="bg-red-50 text-red-500 p-3 rounded-xl text-sm mb-4">{error}</div>}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-purple-700 text-sm font-medium mb-1.5">Full Name</label>
+              <div className="relative">
+                <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-pink-400" />
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3.5 rounded-2xl border-2 border-pink-200/50 focus:border-pink-400 outline-none transition bg-white/40 text-purple-800 placeholder-purple-300"
+                  placeholder="John Doe"
+                  required
+                />
+              </div>
+            </div>
+
             <div>
               <label className="block text-purple-700 text-sm font-medium mb-1.5">Email</label>
               <div className="relative">
@@ -123,6 +126,22 @@ const LoginPage = () => {
                   className="w-full pl-12 pr-4 py-3.5 rounded-2xl border-2 border-pink-200/50 focus:border-pink-400 outline-none transition bg-white/40 text-purple-800 placeholder-purple-300"
                   placeholder="••••••••"
                   required
+                  minLength={6}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-purple-700 text-sm font-medium mb-1.5">Confirm Password</label>
+              <div className="relative">
+                <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-pink-400" />
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3.5 rounded-2xl border-2 border-pink-200/50 focus:border-pink-400 outline-none transition bg-white/40 text-purple-800 placeholder-purple-300"
+                  placeholder="••••••••"
+                  required
                 />
               </div>
             </div>
@@ -130,29 +149,14 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-pink-400 to-purple-400 text-white px-8 py-3.5 rounded-2xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition disabled:opacity-50"
+              className="w-full bg-gradient-to-r from-pink-400 to-purple-400 text-white px-8 py-3.5 rounded-2xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? 'Creating account...' : <>Create Account <FaArrowRight /></>}
             </button>
           </form>
 
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-pink-200/50" /></div>
-              <div className="relative flex justify-center text-sm"><span className="px-4 bg-white/30 text-purple-400">Or continue with</span></div>
-            </div>
-            <div className="flex gap-3 mt-4">
-              <button onClick={handleGoogle} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-pink-200/50 hover:bg-white/30 transition text-purple-700">
-                <FaGoogle /> Google
-              </button>
-              <button onClick={handleGitHub} className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-pink-200/50 hover:bg-white/30 transition text-purple-700">
-                <FaGithub /> GitHub
-              </button>
-            </div>
-          </div>
-
           <div className="mt-6 text-center text-purple-500">
-            Don't have an account? <Link to="/signup" className="text-pink-500 font-semibold hover:underline">Create one</Link>
+            Already have an account? <Link to="/login" className="text-pink-500 font-semibold hover:underline">Sign in</Link>
           </div>
         </div>
       </motion.div>
@@ -160,4 +164,4 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage
+export default SignupPage
