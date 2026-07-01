@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
-import { FaHeart, FaSignInAlt, FaUserPlus, FaComment, FaEdit, FaCheck } from 'react-icons/fa'
+import { FaHeart, FaSignInAlt, FaUserPlus, FaEdit, FaCheck } from 'react-icons/fa'
 import MochiSVG from '../components/MochiSVG'
 
 const LoginPage = () => {
@@ -22,17 +22,8 @@ const LoginPage = () => {
   const [petName, setPetName] = useState('Mochi')
   const [isEditingName, setIsEditingName] = useState(false)
   const [tempName, setTempName] = useState('')
-  const [bgColor, setBgColor] = useState(0)
   const [hearts, setHearts] = useState([])
   const messagesEndRef = useRef(null)
-
-  // ===== 3D PINK BACKGROUND — SLOW COLOR SHIFT =====
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBgColor(prev => (prev + 0.5) % 360)
-    }, 100)
-    return () => clearInterval(interval)
-  }, [])
 
   // ===== FLOATING HEARTS =====
   useEffect(() => {
@@ -40,18 +31,17 @@ const LoginPage = () => {
       const newHeart = {
         id: Date.now(),
         x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: Math.random() * 20 + 10,
-        speed: Math.random() * 2 + 1,
+        size: Math.random() * 18 + 8,
+        speed: Math.random() * 2 + 1.5,
         delay: Math.random() * 2,
-        opacity: Math.random() * 0.4 + 0.2,
+        opacity: Math.random() * 0.3 + 0.2,
         rotate: Math.random() * 360,
       }
       setHearts(prev => [...prev, newHeart])
       setTimeout(() => {
         setHearts(prev => prev.filter(h => h.id !== newHeart.id))
       }, 5000)
-    }, 400)
+    }, 300)
     return () => clearInterval(heartInterval)
   }, [])
 
@@ -98,19 +88,19 @@ const LoginPage = () => {
   const getAIResponse = (msg) => {
     const m = msg.toLowerCase()
     if (m.includes('code') || m.includes('how to')) {
-      return `Great question! Let me help you with that! 💻\n\nHere's a simple example:\n\n\`\`\`javascript\n// Your code here\nfunction solution() {\n  // Implementation\n}\n\`\`\`\n\nLet me know if you need more details! 💗`
+      return `Great question! Let me help you with that! 💻\n\nHere's a simple example:\n\n\`\`\`javascript\nfunction solution() {\n  // Your code here\n}\n\`\`\`\n\nLet me know if you need more details! 💗`
     }
     if (m.includes('debug') || m.includes('error') || m.includes('bug')) {
-      return `Don't worry! Let's debug together! 🔍\n\nHere's my approach:\n1. Check the error message\n2. Look at the line number\n3. Identify the root cause\n4. Implement the fix\n\nWhat's the error you're seeing? 💗`
+      return `Don't worry! Let's debug together! 🔍\n\n1. Check the error message\n2. Look at the line number\n3. Identify the root cause\n4. Implement the fix\n\nWhat's the error you're seeing? 💗`
     }
     if (m.includes('react')) {
-      return `React is amazing! Let me break it down: ⚛️\n\n• useState: Manage component state\n• useEffect: Handle side effects\n• Props: Pass data between components\n• Context: Share data globally\n\nWant me to explain any of these? 💗`
+      return `React is amazing! ⚛️\n\n• useState: Manage state\n• useEffect: Handle side effects\n• Props: Pass data between components\n\nWant me to explain any of these? 💗`
     }
     if (m.includes('hello') || m.includes('hi')) {
       return `Hey there! 👋 So excited to code with you!\n\nWhat are we building today? I'm ready to help! 💻💗`
     }
     if (m.includes('project')) {
-      return `Building projects is the best way to learn! 🚀\n\nHere's a step-by-step approach:\n1. Plan your project\n2. Set up the environment\n3. Build the core features\n4. Add polish and deploy\n\nWhat kind of project are you building? 💗`
+      return `Building projects is the best way to learn! 🚀\n\n1. Plan your project\n2. Set up the environment\n3. Build the core features\n4. Add polish and deploy\n\nWhat kind of project are you building? 💗`
     }
     return `That's a great question! 🤔\n\nI can help with:\n• 💻 Coding questions\n• 🔍 Debugging\n• 📚 DSA practice\n• 🚀 Project ideas\n• 💗 Career advice\n\nWhat would you like to know more about?`
   }
@@ -145,30 +135,14 @@ const LoginPage = () => {
     <div 
       className="min-h-screen relative overflow-hidden flex items-center justify-center p-4"
       style={{
-        background: `radial-gradient(ellipse at 20% 20%, 
-          hsl(${bgColor}, 85%, 92%) 0%, 
-          hsl(${(bgColor + 20) % 360}, 85%, 88%) 20%,
-          hsl(${(bgColor + 40) % 360}, 85%, 90%) 40%,
-          hsl(${(bgColor + 60) % 360}, 85%, 85%) 60%,
-          hsl(${(bgColor + 80) % 360}, 85%, 92%) 80%,
-          hsl(${(bgColor + 100) % 360}, 85%, 88%) 100%
-        )`,
+        background: 'radial-gradient(ellipse at 30% 20%, #FFF0F5 0%, #FFE4E9 25%, #FFD6E7 50%, #FFC8D8 75%, #FFB6C6 100%)',
       }}
     >
-      {/* ===== 3D GLOW EFFECTS ===== */}
+      {/* ===== 3D PINK GLOW EFFECTS ===== */}
       <div className="absolute inset-0 pointer-events-none">
-        <div 
-          className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full blur-3xl animate-pulse"
-          style={{ background: `hsl(${bgColor + 20}, 80%, 85%)`, opacity: 0.3 }}
-        />
-        <div 
-          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full blur-3xl animate-pulse delay-1000"
-          style={{ background: `hsl(${bgColor + 60}, 80%, 90%)`, opacity: 0.25 }}
-        />
-        <div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full blur-3xl animate-pulse delay-2000"
-          style={{ background: `hsl(${bgColor + 40}, 80%, 95%)`, opacity: 0.15 }}
-        />
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl animate-pulse" style={{ background: '#FFD6E7', opacity: 0.4 }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full blur-3xl animate-pulse delay-1000" style={{ background: '#FFB6C6', opacity: 0.3 }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-3xl animate-pulse delay-2000" style={{ background: '#FFE4E9', opacity: 0.2 }} />
       </div>
 
       {/* ===== FLOATING HEARTS ===== */}
@@ -176,30 +150,13 @@ const LoginPage = () => {
         {hearts.map((heart) => (
           <motion.div
             key={heart.id}
-            initial={{ 
-              y: '110%', 
-              opacity: 0,
-              rotate: heart.rotate,
-              scale: 0
-            }}
-            animate={{ 
-              y: '-10%', 
-              opacity: heart.opacity,
-              rotate: heart.rotate + 360,
-              scale: 1
-            }}
-            transition={{ 
-              duration: heart.speed * 2.5, 
-              delay: heart.delay,
-              ease: "easeOut"
-            }}
+            initial={{ y: '110%', opacity: 0, rotate: heart.rotate, scale: 0 }}
+            animate={{ y: '-10%', opacity: heart.opacity, rotate: heart.rotate + 360, scale: 1 }}
+            transition={{ duration: heart.speed * 2.5, delay: heart.delay, ease: "easeOut" }}
             className="absolute"
-            style={{
-              left: `${heart.x}%`,
-              fontSize: `${heart.size}px`,
-            }}
+            style={{ left: `${heart.x}%`, fontSize: `${heart.size}px` }}
           >
-            <FaHeart className="text-pink-300/60 drop-shadow-lg" />
+            <FaHeart className="text-pink-300/50 drop-shadow-lg" />
           </motion.div>
         ))}
       </div>
@@ -214,19 +171,13 @@ const LoginPage = () => {
         {/* Logo */}
         <div className="text-center mb-4">
           <h1 className="text-5xl font-bold flex items-center justify-center gap-2">
-            <span className="bg-gradient-to-r from-pink-400 via-pink-500 to-purple-400 bg-clip-text text-transparent">
-              Codes
-            </span>
-            <span className="text-[#2D1B3D]">mate</span>
-            <motion.span
-              animate={{ scale: [1, 1.3, 1] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="text-pink-400"
-            >
+            <span className="bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">Codes</span>
+            <span className="text-[#4A2B3D]">mate</span>
+            <motion.span animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 3, repeat: Infinity }} className="text-pink-400">
               <FaHeart className="text-3xl" />
             </motion.span>
           </h1>
-          <p className="text-purple-600 text-sm mt-2">✨ Find your coding companion ✨</p>
+          <p className="text-pink-500 text-sm mt-2">✨ Find your coding companion ✨</p>
         </div>
 
         {/* Quote */}
@@ -238,7 +189,7 @@ const LoginPage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 1 }}
-              className="text-purple-600 text-lg italic max-w-sm mx-auto"
+              className="text-pink-600 text-lg italic max-w-sm mx-auto"
             >
               {quote || '"Small steps build amazing developers."'}
             </motion.p>
@@ -250,36 +201,36 @@ const LoginPage = () => {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="bg-white/30 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl border border-white/40"
+          className="bg-white/40 backdrop-blur-2xl rounded-3xl p-8 shadow-2xl border border-white/60"
         >
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-purple-700 text-sm font-medium mb-1.5">Email</label>
+              <label className="block text-pink-700 text-sm font-medium mb-1.5">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-2xl border-2 border-pink-200/50 focus:border-pink-400 outline-none transition bg-white/40 text-purple-800 placeholder-purple-300"
+                className="w-full px-4 py-3.5 rounded-2xl border-2 border-pink-200/60 focus:border-pink-400 outline-none transition bg-white/50 text-pink-800 placeholder-pink-300"
                 placeholder="you@example.com"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-purple-700 text-sm font-medium mb-1.5">Password</label>
+              <label className="block text-pink-700 text-sm font-medium mb-1.5">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-2xl border-2 border-pink-200/50 focus:border-pink-400 outline-none transition bg-white/40 text-purple-800 placeholder-purple-300"
+                  className="w-full px-4 py-3.5 rounded-2xl border-2 border-pink-200/60 focus:border-pink-400 outline-none transition bg-white/50 text-pink-800 placeholder-pink-300"
                   placeholder="••••••••"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-purple-400/60 hover:text-purple-600 transition"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-pink-400/60 hover:text-pink-600 transition"
                 >
                   {showPassword ? '👁️' : '👁️‍🗨️'}
                 </button>
@@ -289,21 +240,16 @@ const LoginPage = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-pink-400 via-pink-500 to-purple-400 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg transition-all duration-300 disabled:opacity-50 hover:scale-105"
+              className="w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg transition-all duration-300 disabled:opacity-50 hover:scale-105"
             >
-              {loading ? 'Signing in...' : (
-                <>
-                  Sign In
-                  <FaSignInAlt className="inline ml-2" />
-                </>
-              )}
+              {loading ? 'Signing in...' : <>Sign In <FaSignInAlt className="inline ml-2" /></>}
             </button>
           </form>
 
           <div className="mt-4 text-center">
             <Link
               to="/register"
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-white/50 backdrop-blur-sm border-2 border-pink-300/50 text-purple-700 rounded-2xl font-semibold hover:bg-white/70 transition hover:scale-105"
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-white/50 backdrop-blur-sm border-2 border-pink-300/50 text-pink-700 rounded-2xl font-semibold hover:bg-white/70 transition hover:scale-105"
             >
               <FaUserPlus className="text-pink-400" /> Create Account
             </Link>
@@ -311,7 +257,7 @@ const LoginPage = () => {
         </motion.div>
       </motion.div>
 
-      {/* ===== MOCHI COMPANION (Bottom-Right) ===== */}
+      {/* ===== MOCHI COMPANION ===== */}
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -327,10 +273,10 @@ const LoginPage = () => {
               exit={{ scale: 0.8, opacity: 0, y: 20 }}
               className="bg-white/95 backdrop-blur-2xl rounded-3xl shadow-2xl border-2 border-pink-200/50 w-80 max-h-[400px] flex flex-col mb-3 overflow-hidden"
             >
-              {/* Chat Header */}
-              <div className="flex items-center justify-between p-3 border-b border-pink-100/50 bg-gradient-to-r from-pink-50 to-purple-50">
+              {/* Header */}
+              <div className="flex items-center justify-between p-3 border-b border-pink-100/50 bg-gradient-to-r from-pink-50 to-rose-50">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full flex items-center justify-center text-lg">🐶</div>
+                  <div className="w-8 h-8 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full flex items-center justify-center text-lg">🐶</div>
                   <div>
                     {isEditingName ? (
                       <div className="flex items-center gap-1">
@@ -338,7 +284,7 @@ const LoginPage = () => {
                           type="text"
                           value={tempName}
                           onChange={(e) => setTempName(e.target.value)}
-                          className="text-sm font-semibold text-purple-700 bg-white/50 border border-pink-200 rounded px-1 w-20"
+                          className="text-sm font-semibold text-pink-700 bg-white/50 border border-pink-200 rounded px-1 w-20"
                           autoFocus
                           onKeyPress={(e) => e.key === 'Enter' && handleNameChange()}
                         />
@@ -348,26 +294,26 @@ const LoginPage = () => {
                       </div>
                     ) : (
                       <div className="flex items-center gap-1">
-                        <span className="text-sm font-semibold text-purple-700">💖 {petName}</span>
-                        <button onClick={() => { setTempName(petName); setIsEditingName(true); }} className="text-purple-400 hover:text-purple-600">
+                        <span className="text-sm font-semibold text-pink-700">💖 {petName}</span>
+                        <button onClick={() => { setTempName(petName); setIsEditingName(true); }} className="text-pink-400 hover:text-pink-600">
                           <FaEdit className="text-xs" />
                         </button>
                       </div>
                     )}
-                    <div className="text-[10px] text-purple-400 flex items-center gap-1">
+                    <div className="text-[10px] text-pink-400 flex items-center gap-1">
                       <span className="w-1.5 h-1.5 bg-green-400 rounded-full inline-block animate-pulse" />
                       Online
                     </div>
                   </div>
                 </div>
-                <button onClick={() => setShowChat(false)} className="text-purple-400 hover:text-purple-600 transition">✕</button>
+                <button onClick={() => setShowChat(false)} className="text-pink-400 hover:text-pink-600 transition">✕</button>
               </div>
 
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-3 space-y-2 max-h-48">
                 {chatMessages.map((msg) => (
                   <div key={msg.id} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[85%] p-2 rounded-2xl ${msg.type === 'user' ? 'bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-br-none' : 'bg-purple-50 text-purple-700 rounded-bl-none'}`}>
+                    <div className={`max-w-[85%] p-2 rounded-2xl ${msg.type === 'user' ? 'bg-gradient-to-r from-pink-400 to-rose-400 text-white rounded-br-none' : 'bg-pink-50 text-pink-700 rounded-bl-none'}`}>
                       <p className="text-sm whitespace-pre-wrap leading-relaxed">{msg.content}</p>
                       <span className="text-[8px] opacity-50 mt-0.5 block">
                         {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -377,7 +323,7 @@ const LoginPage = () => {
                 ))}
                 {isTyping && (
                   <div className="flex justify-start">
-                    <div className="bg-purple-50 text-purple-400 p-2 rounded-2xl rounded-bl-none">
+                    <div className="bg-pink-50 text-pink-400 p-2 rounded-2xl rounded-bl-none">
                       <span className="inline-flex gap-1">
                         <span className="animate-bounce">•</span>
                         <span className="animate-bounce delay-100">•</span>
@@ -395,7 +341,7 @@ const LoginPage = () => {
                   <button
                     key={action}
                     onClick={() => { setChatInput(action); setTimeout(handleSendChat, 100) }}
-                    className="text-[10px] px-2 py-1 rounded-full bg-pink-50 text-purple-600 hover:bg-pink-100 transition border border-pink-200"
+                    className="text-[10px] px-2 py-1 rounded-full bg-pink-50 text-pink-600 hover:bg-pink-100 transition border border-pink-200"
                   >
                     {action}
                   </button>
@@ -411,12 +357,12 @@ const LoginPage = () => {
                     onChange={(e) => setChatInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendChat()}
                     placeholder="💭 Ask Mochi..."
-                    className="flex-1 px-3 py-1.5 rounded-full border-2 border-pink-200/50 focus:border-pink-400 outline-none transition bg-white/50 text-purple-700 text-sm placeholder-purple-300"
+                    className="flex-1 px-3 py-1.5 rounded-full border-2 border-pink-200/50 focus:border-pink-400 outline-none transition bg-white/50 text-pink-700 text-sm placeholder-pink-300"
                   />
                   <button
                     onClick={handleSendChat}
                     disabled={!chatInput.trim()}
-                    className="bg-gradient-to-r from-pink-400 to-purple-400 text-white px-3 py-1.5 rounded-full text-sm font-semibold hover:shadow-lg transition disabled:opacity-50 flex-shrink-0"
+                    className="bg-gradient-to-r from-pink-400 to-rose-400 text-white px-3 py-1.5 rounded-full text-sm font-semibold hover:shadow-lg transition disabled:opacity-50"
                   >
                     Send
                   </button>
@@ -437,18 +383,13 @@ const LoginPage = () => {
             <div className="absolute inset-0 bg-pink-300/20 rounded-full blur-xl animate-pulse" />
             <MochiSVG state="idle" expression="happy" />
           </div>
-          <div className="absolute -top-1 -right-1 bg-pink-400 text-white text-[8px] px-1.5 py-0.5 rounded-full animate-pulse">
-            💬
-          </div>
+          <div className="absolute -top-1 -right-1 bg-pink-400 text-white text-[8px] px-1.5 py-0.5 rounded-full animate-pulse">💬</div>
         </motion.div>
 
-        {/* Name */}
-        <p className="text-xs text-purple-500 font-semibold mt-1 bg-white/50 px-2 py-0.5 rounded-full">
-          💖 {petName}
-        </p>
+        <p className="text-xs text-pink-500 font-semibold mt-1 bg-white/50 px-2 py-0.5 rounded-full">💖 {petName}</p>
       </motion.div>
 
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-purple-300/50">
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-pink-300/50">
         © 2026 Codesmate
       </div>
     </div>
